@@ -1,5 +1,6 @@
 {
+  "type": "module",
   "dependencies": {
-    "dayjs": "^1.11.23"
+    "dayjs": "^1.11.10"
   }
 }

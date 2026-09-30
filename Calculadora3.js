@@ -1,37 +1,22 @@
-import dayjs from 'dayjs';
-import * as readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
-const rl = readline.createInterface({ input, output });
-//capturar los datos
-const SalarioMensual = await rl.question("Ingrese el salario mensual (USD): ");
-const fechaInicio = await rl.question("Ingrese la fecha de inicio (YYYY-MM-DD): ");
-const fechaFin = await rl.question("Ingrese la fecha de fin (YYYY-MM-DD): ");
-const causaDeFinalizacion = await rl.question("Ingrese la causa de finalización (despido-1/renuncia-2): ");
-const horasExtrasDiurnas = await rl.question("Ingrese las horas extras diurnas: ");
-const horasExtrasNocturnas = await rl.question("Ingrese las horas extras nocturnas: ");
-const diasAsueto = await rl.question("Ingrese los días de asueto laborados: ");
-const diasDescansoSemanal = await rl.question("Ingrese los días de descanso semanal laborados: ");
-//conmvertir los datos a números y fechas, en caso de que no se ingrese un valor, asignar 0
-const SalarioMensualNum = parseFloat(SalarioMensual); // Cambiado a parseFloat para admitir centavos
+// Recibiendo los valores desde el formulario HTML en lugar de consola:
+const SalarioMensualNum = parseFloat(document.getElementById('salario').value) || 0;
+const fechaInicio = document.getElementById('fechaInicio').value;
+const fechaFin = document.getElementById('fechaFin').value;
+const causaDeFinalizacionNum = parseInt(document.getElementById('causa').value);
+const horasExtrasDiurnasNum = parseInt(document.getElementById('horasDiurnas').value) || 0;
+const horasExtrasNocturnasNum = parseInt(document.getElementById('horasNocturnas').value) || 0;
+const diasAsuetoNum = parseInt(document.getElementById('diasAsueto').value) || 0;
+const diasDescansoSemanalNum = parseInt(document.getElementById('diasDescansoSemanal').value) || 0;
+
 const fechaInicioNum = new Date(fechaInicio.replace(/-/g, '/'));
 const fechaFinNum = new Date(fechaFin.replace(/-/g, '/'));
-const causaDeFinalizacionNum = parseInt(causaDeFinalizacion);
-const horasExtrasDiurnasNum = parseInt(horasExtrasDiurnas) || 0;
-const horasExtrasNocturnasNum = parseInt(horasExtrasNocturnas) || 0;
-const diasAsuetoNum = parseInt(diasAsueto) || 0;
-const diasDescansoSemanalNum = parseInt(diasDescansoSemanal) || 0;
-rl.close();
-
-
 
 
 //PASO 1: Calcular el salario básico diario (SBD) y el salario mínimo diario
-
 //Calcular el salario basico diario (SBD) y el salario mínimo diario según el sector económico
 const salarioBasicoDiario = SalarioMensualNum / 30;
 //Calcular valor hora diuerna
 const horaOrdinaria = salarioBasicoDiario / 8;
-
 
 //PASO 2: JORNADAS EXTRAORDINARIAS
 
@@ -41,12 +26,16 @@ const valorHoraExtraDiurna = (horaOrdinaria * 2)*horasExtrasDiurnasNum;
 const valorHoraExtraNocturna = (horaOrdinaria * 1.25*2)*horasExtrasNocturnasNum;
 //Dias de asueto laborados (Recargo del 100% por ser día de asueto)
 const valorDiasAsueto = (salarioBasicoDiario * 2)*diasAsuetoNum;
-//Dias de descanso semanal laborados (Recargo del 100% por ser día de descanso)
+//Dias de descanso semanal laborados (Recargo del 50% por ser día de descanso)
 const valorDiasDescansoSemanal = (salarioBasicoDiario * 1.5)*diasDescansoSemanalNum;
 
 
 const inicio = dayjs(fechaInicioNum);
 const fin = dayjs(fechaFinNum);
+
+// ==========================================
+// 1. CÁLCULO DE AGUINALDO (Corte 12 de diciembre)
+// ==========================================
 let corteAguinaldo = dayjs(`${fin.year()}-12-12`);
 if (fin.isBefore(corteAguinaldo)) {
     corteAguinaldo = corteAguinaldo.subtract(1, 'year');
@@ -54,36 +43,51 @@ if (fin.isBefore(corteAguinaldo)) {
 if (inicio.isAfter(corteAguinaldo)) {
     corteAguinaldo = inicio;
 }
-const diasProporcionalesAguinaldo = fin.diff(corteAguinaldo, 'day');
+
+// Para aplicar el estándar comercial al aguinaldo:
+const mesesAguinaldo = fin.diff(corteAguinaldo, 'month');
+const fechaMesesAguinaldo = corteAguinaldo.add(mesesAguinaldo, 'month');
+const diasSueltosAguinaldo = fin.diff(fechaMesesAguinaldo, 'day');
+
+const diasProporcionalesAguinaldo = (mesesAguinaldo * 30) + diasSueltosAguinaldo;
 
 
-// 1. Calcular años exactos
+// ==========================================
+// 2. CÁLCULO DE VACACIÓN E INDEMNIZACIÓN (Aniversario)
+// ==========================================
+
+// Años exactos
 const aniosLaborados = fin.diff(inicio, 'year');
-
-// 2. Encontrar la fecha exacta del último aniversario (le suma los años al inicio)
 const ultimoAniversario = inicio.add(aniosLaborados, 'year');
 
-// 3. Calcular los meses restantes (Solo para mostrar en pantalla)
+// Meses restantes (Para mostrar en pantalla y calcular cuota)
 const mesesLaborados = fin.diff(ultimoAniversario, 'month');
+const fechaUltimoMes = ultimoAniversario.add(mesesLaborados, 'month');
 
-// 4. Calcular los días proporcionales sobrantes (Para la matemática)
-const diasProporcionales = fin.diff(ultimoAniversario, 'day');
+// Días sueltos desde el último mes completo
+const diasSueltos = fin.diff(fechaUltimoMes, 'day');
+
+// Días proporcionales comerciales (Para la matemática)
+const diasProporcionales = (mesesLaborados * 30) + diasSueltos;
 
 
 //PASO 3: Prestaciones proporcionales 
 
 //Calcular la vacacion proporcional (15 dias de salario base mas un 30% de recargo)
-const valorVacacionProporcional = ((salarioBasicoDiario * 15 * 1.3)/360)*diasProporcionales;
+const valorVacacionProporcional = ((salarioBasicoDiario * 15 * 1.3)*diasProporcionales)/365;
 //Calcular aguinaldo proporcional (<3 anos = 15 dias, 3-10 anos = 19 dias, >10 anos = 21 dias)
 let valorAguinaldoProporcional = 0;
- if (aniosLaborados < 3) {
-    valorAguinaldoProporcional = (salarioBasicoDiario * 15 / 360) * diasProporcionalesAguinaldo;
+if (diasProporcionalesAguinaldo < 200) {
+    valorAguinaldoProporcional = 0;
+}
+if (aniosLaborados < 3) {
+    valorAguinaldoProporcional = (salarioBasicoDiario * 15 / 365) * diasProporcionalesAguinaldo;
 }
 else if (aniosLaborados >= 3 && aniosLaborados <= 10) {
-    valorAguinaldoProporcional = (salarioBasicoDiario * 19 / 360) * diasProporcionales;
+    valorAguinaldoProporcional = (salarioBasicoDiario * 19 / 365) * diasProporcionalesAguinaldo;
 }
 else if (aniosLaborados > 10) {
-    valorAguinaldoProporcional = (salarioBasicoDiario * 21 / 360) * diasProporcionalesAguinaldo;
+    valorAguinaldoProporcional = (salarioBasicoDiario * 21 / 365) * diasProporcionalesAguinaldo;
 }
 
 //PASO 4: Indemnización o compensación por cierre de contrato
@@ -153,6 +157,26 @@ if (montoGravable > 1000) {
     descuentoISSS = montoGravable * 0.03;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 3. Calcular AFP (7.25%)
 const descuentoAFP = montoGravable * 0.0725;
 
@@ -189,7 +213,8 @@ console.log("\n===============================================");
 console.log("      LIQUIDACIÓN LABORAL - EL SALVADOR      ");
 console.log("===============================================");
 console.log(`Tiempo laborado: ${aniosLaborados} años, ${mesesLaborados} meses.`);
-console.log(`Días proporcionales para cálculo: ${diasProporcionales} días.`);
+console.log(`Días proporcionales para vacaciones: ${diasProporcionales} días.`);
+console.log(`Días proporcionales para aguinaldo: ${diasProporcionalesAguinaldo} días.`);
 console.log("-----------------------------------------------");
 console.log(`[+] Horas Extras Diurnas:      $${valorHoraExtraDiurna.toFixed(2)}`);
 console.log(`[+] Horas Extras Nocturnas:    $${valorHoraExtraNocturna.toFixed(2)}`);

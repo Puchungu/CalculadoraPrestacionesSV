@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 const rl = readline.createInterface({ input, output });
@@ -44,37 +45,29 @@ const valorDiasAsueto = (salarioBasicoDiario * 2)*diasAsuetoNum;
 const valorDiasDescansoSemanal = (salarioBasicoDiario * 1.5)*diasDescansoSemanalNum;
 
 
-// 1. CALCULAR LOS AÑOS EXACTOS LABORADOS
-let aniosLaborados = fechaFinNum.getFullYear() - fechaInicioNum.getFullYear();
-
-// Creamos una fecha de aniversario basada en la fecha de inicio pero en el año de fin
-const fechaAniversario = new Date(fechaInicioNum);
-fechaAniversario.setFullYear(fechaFinNum.getFullYear());
-
-// Si la fecha de fin no ha alcanzado el aniversario de este año, restamos un año
-if (fechaFinNum < fechaAniversario) {
-    aniosLaborados--;
-    fechaAniversario.setFullYear(fechaAniversario.getFullYear() - 1);
+const inicio = dayjs(fechaInicioNum);
+const fin = dayjs(fechaFinNum);
+let corteAguinaldo = dayjs(`${fin.year()}-12-12`);
+if (fin.isBefore(corteAguinaldo)) {
+    corteAguinaldo = corteAguinaldo.subtract(1, 'year');
 }
-
-// 2. CALCULAR LOS MESES RESTANTES
-let mesesLaborados = fechaFinNum.getMonth() - fechaAniversario.getMonth();
-if (mesesLaborados < 0) {
-    mesesLaborados += 12;
+if (inicio.isAfter(corteAguinaldo)) {
+    corteAguinaldo = inicio;
 }
+const diasProporcionalesAguinaldo = fin.diff(corteAguinaldo, 'day');
 
-// Ajuste adicional si el día actual es menor al día de inicio en el último mes
-if (fechaFinNum.getDate() < fechaInicioNum.getDate()) {
-    mesesLaborados--;
-    if (mesesLaborados < 0) {
-        mesesLaborados = 11;
-    }
-}
 
-// 3. CALCULAR LOS DÍAS PROPORCIONALES (Obligatorio para las fórmulas del Paso 3)
-const diffMilisegundos = Math.abs(fechaFinNum - fechaAniversario);
-const diasProporcionales = Math.ceil(diffMilisegundos / (1000 * 60 * 60 * 24));
+// 1. Calcular años exactos
+const aniosLaborados = fin.diff(inicio, 'year');
 
+// 2. Encontrar la fecha exacta del último aniversario (le suma los años al inicio)
+const ultimoAniversario = inicio.add(aniosLaborados, 'year');
+
+// 3. Calcular los meses restantes (Solo para mostrar en pantalla)
+const mesesLaborados = fin.diff(ultimoAniversario, 'month');
+
+// 4. Calcular los días proporcionales sobrantes (Para la matemática)
+const diasProporcionales = fin.diff(ultimoAniversario, 'day');
 
 
 //PASO 3: Prestaciones proporcionales 
@@ -84,13 +77,13 @@ const valorVacacionProporcional = ((salarioBasicoDiario * 15 * 1.3)/360)*diasPro
 //Calcular aguinaldo proporcional (<3 anos = 15 dias, 3-10 anos = 19 dias, >10 anos = 21 dias)
 let valorAguinaldoProporcional = 0;
  if (aniosLaborados < 3) {
-    valorAguinaldoProporcional = (salarioBasicoDiario * 15 / 360) * diasProporcionales;
+    valorAguinaldoProporcional = (salarioBasicoDiario * 15 / 360) * diasProporcionalesAguinaldo;
 }
 else if (aniosLaborados >= 3 && aniosLaborados <= 10) {
     valorAguinaldoProporcional = (salarioBasicoDiario * 19 / 360) * diasProporcionales;
 }
 else if (aniosLaborados > 10) {
-    valorAguinaldoProporcional = (salarioBasicoDiario * 21 / 360) * diasProporcionales;
+    valorAguinaldoProporcional = (salarioBasicoDiario * 21 / 360) * diasProporcionalesAguinaldo;
 }
 
 //PASO 4: Indemnización o compensación por cierre de contrato
@@ -215,10 +208,3 @@ console.log(`TOTAL DESCUENTOS:              $${totalDescuentos.toFixed(2)}`);
 console.log("===============================================");
 console.log(`TOTAL LÍQUIDO A RECIBIR:       $${totalLiquido.toFixed(2)}`);
 console.log("===============================================\n");
-
-
-
-
-
-
-

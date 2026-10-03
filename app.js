@@ -1,4 +1,5 @@
-// Recibiendo los valores desde el formulario HTML en lugar de consola:
+
+/// Recibiendo los valores desde el formulario HTML en lugar de consola:
 const SalarioMensualNum = parseFloat(document.getElementById('salario').value) || 0;
 const fechaInicio = document.getElementById('fechaInicio').value;
 const fechaFin = document.getElementById('fechaFin').value;

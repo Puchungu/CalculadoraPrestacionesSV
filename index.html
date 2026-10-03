@@ -15,7 +15,7 @@
     <main class="panel-formulario">
       <header class="encabezado-seccion">
         <h1>Calculadora de Finiquito Laboral</h1>
-        <p>Cálculo conforme al Código de Trabajo y Ley de Renuncia Voluntaria (El Salvador)</p>
+        <p>Cálculo conforme al Código de Trabajo (El Salvador)</p>
       </header>
 
       <form id="formularioLiquidacion" class="formulario-grid" onsubmit="return false;">
@@ -183,6 +183,32 @@
     </div>
 
     <!-- Deducciones y Total Neto se mantienen igual debajo -->
+
+        <hr class="divisor">
+
+        <h3 class="subtitulo-resumen">Deducciones de Ley</h3>
+        <div class="desglose-lineas">
+          <div class="linea-concepto descuento">
+            <span>ISSS (Salud):</span>
+            <strong id="lblISSS">-$0.00</strong>
+          </div>
+          <div class="linea-concepto descuento">
+            <span>AFP (Pensiones):</span>
+            <strong id="lblAFP">-$0.00</strong>
+          </div>
+          <div class="linea-concepto descuento">
+            <span>Impuesto sobre la Renta:</span>
+            <strong id="lblRenta">-$0.00</strong>
+          </div>
+        </div>
+
+        <div class="caja-total">
+          <span>Total Neto a Pagar</span>
+          <div class="monto-destacado" id="lblTotalNeto">$0.00</div>
+        </div>
+      </div>
+    </aside>
+  </div>
 
   <script src="Calculadora4.js"></script>
 </body>

@@ -132,35 +132,55 @@ function procesarLiquidacion() {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //Calculando el total bruto a pagar
     const totalExtrasYAsuetos = hE + hN + sE + sDD;
     const totalBruto = indemnizacionTotal + aP + montoFinalVacacion + totalExtrasYAsuetos;
 
+
+   // 1. BASE GRAVABLE (Solo rubros sujetos a retención: vacaciones y extras/asuetos)
+  const totalGravable = montoFinalVacacion + totalExtrasYAsuetos;
+  const aguinaldoGravableRenta = Math.max(0, aP - 1500);
+
+  let retencionISSS = 0;
+  let retencionAFP = 0;
+  let retencionRenta = 0;
+
+  if (totalGravable > 0 || aguinaldoGravableRenta > 0) {
+    // 2. ISSS (3% con tope legal de $1,000.00)
+    const baseISSS = Math.min(totalGravable, 1000);
+    retencionISSS = baseISSS * 0.03;
+
+    // 3. AFP (7.25%)
+    retencionAFP = totalGravable * 0.0725;
+
+    // 4. RENTA IMPONIBLE
+    const rentaImponible = totalGravable - (retencionISSS + retencionAFP)+ aguinaldoGravableRenta;
+
+    // 5. EVALUACIÓN DE TRAMOS DE RENTA
+    if (rentaImponible > 2038.10) {
+      // Tramo IV: Desde $2,038.11 en adelante
+      retencionRenta = ((rentaImponible - 2038.11) * 0.30) + 288.57;
+    } else if (rentaImponible >= 895.25) {
+      // Tramo III: $895.25 a $2,038.10
+      retencionRenta = ((rentaImponible - 895.25) * 0.20) + 60.00;
+    } else if (rentaImponible >= 550.01) {
+      // Tramo II: $550.01 a $895.24
+      retencionRenta = ((rentaImponible - 550.00) * 0.10) + 17.67;
+    } else {
+      // Tramo I: Hasta $550.00
+      retencionRenta = 0;
+    }
+  }
+
+  // 6. TOTALES FINALES
+  const totalDeducciones = retencionISSS + retencionAFP + retencionRenta;
+  const totalNetoPagar = totalBruto - totalDeducciones;
+
+  // 7. ACTUALIZAR EN PANTALLA
+  document.getElementById('lblISSS').textContent = `-$${retencionISSS.toFixed(2)}`;
+  document.getElementById('lblAFP').textContent = `-$${retencionAFP.toFixed(2)}`;
+  document.getElementById('lblRenta').textContent = `-$${retencionRenta.toFixed(2)}`;
+  document.getElementById('lblTotalNeto').textContent = `$${totalNetoPagar.toFixed(2)}`;
 
 
     // --- MOSTRAR RESULTADOS EN PANTALLA ---

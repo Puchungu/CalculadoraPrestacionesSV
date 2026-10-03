@@ -1,307 +1,189 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Liquidación Laboral - El Salvador</title>
-    <!-- Carga de Day.js por CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin: auto;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px;
-            border: none;
-            width: 100%;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #resultado {
-            margin-top: 20px;
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 4px;
-            white-space: pre-wrap;
-            font-family: monospace;
-            display: none;
-            transition: opacity 0.3s ease;
-        }
-        .loading {
-            text-align: center;
-            color: #007BFF;
-            font-weight: bold;
-            font-family: Arial, sans-serif !important;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Liquidación Laboral - El Salvador</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Day.js para el manejo preciso de fechas -->
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 </head>
 <body>
 
-<div class="container">
-    <h2>Liquidación Laboral (El Salvador)</h2>
-    
-    <div class="form-group">
-        <label for="salario">Salario Mensual (USD):</label>
-        <input type="number" id="salario" step="0.01" placeholder="Ej. 500.00">
+  <div class="contenedor-app">
+    <!-- Panel Izquierdo: Formulario de Entradas -->
+    <main class="panel-formulario">
+      <header class="encabezado-seccion">
+        <h1>Calculadora de Finiquito Laboral</h1>
+        <p>Cálculo conforme al Código de Trabajo y Ley de Renuncia Voluntaria (El Salvador)</p>
+      </header>
+
+      <form id="formularioLiquidacion" class="formulario-grid" onsubmit="return false;">
+        <!-- Tarjeta 1: Datos Contractuales -->
+        <section class="tarjeta">
+          <h2 class="titulo-tarjeta">1. Datos Contractuales y Causa</h2>
+          
+          <div class="grupo-campo">
+            <label for="salarioMensual">Salario Base Mensual ($):</label>
+            <div class="input-con-icono">
+              <span class="icono">$</span>
+              <input type="number" id="salarioMensual" step="0.01" min="0" placeholder="Ej. 600.00" required>
+            </div>
+          </div>
+
+          <div class="fila-dos-columnas">
+            <div class="grupo-campo">
+              <label for="fechaInicio">Fecha de Inicio de Labores:</label>
+              <input type="date" id="fechaInicio" required>
+            </div>
+            <div class="grupo-campo">
+              <label for="fechaFin">Fecha de Finalización (Despido/Salida):</label>
+              <input type="date" id="fechaFin" required>
+            </div>
+          </div>
+
+          <div class="grupo-campo">
+            <label for="causa">Causa de Finalización:</label>
+            <select id="causa">
+              <option value="1">1 - Despido Injustificado (Art. 58 C.T.)</option>
+              <option value="2">2 - Renuncia Voluntaria (Ley 2014)</option>
+            </select>
+          </div>
+
+          <!-- Solo visible si la causa es Renuncia Voluntaria -->
+          <div class="grupo-campo" id="campoPreaviso" style="display: none;">
+            <label>¿Dio preaviso legal de renuncia por escrito?:</label>
+            <div class="control-radios">
+              <label class="radio-label">
+                <input type="radio" name="preaviso" value="si" checked> Sí dio preaviso
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="preaviso" value="no"> No dio preaviso
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tarjeta 2: Vacaciones y Prestaciones en Especie -->
+        <section class="tarjeta">
+          <h2 class="titulo-tarjeta">2. Vacaciones y Prestaciones en Especie</h2>
+          
+          <div class="grupo-campo">
+            <label for="fechaUltimaVacacion">Inicio de Últimas Vacaciones Gozadas:</label>
+            <input type="date" id="fechaUltimaVacacion" required>
+          </div>
+
+          <div class="grupo-campo">
+            <label>¿El último período de vacación ya fue remunerado?:</label>
+            <div class="control-radios">
+              <label class="radio-label">
+                <input type="radio" name="vacacionPagada" value="si" checked> Sí (Solo proporcional)
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="vacacionPagada" value="no"> No (Año completo + proporcional)
+              </label>
+            </div>
+          </div>
+
+          <div class="grupo-campo">
+            <label>Recargos en Especie sobre Vacaciones (Art. 182 C.T.):</label>
+            <div class="control-checkboxes">
+              <label class="checkbox-label">
+                <input type="checkbox" id="checkAlojamiento"> Alojamiento (+25%)
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="checkAlimentacion"> Alimentación (+25%)
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tarjeta 3: Novedades del Último Período -->
+        <section class="tarjeta">
+          <h2 class="titulo-tarjeta">3. Jornada Extraordinaria y Asuetos</h2>
+          
+          <div class="grid-tres-columnas">
+            <div class="grupo-campo">
+              <label for="horasExtrasDiurnas">H. Extras Diurnas:</label>
+              <input type="number" id="horasExtrasDiurnas" min="0" value="0">
+            </div>
+            <div class="grupo-campo">
+              <label for="horasExtrasNocturnas">H. Extras Nocturnas:</label>
+              <input type="number" id="horasExtrasNocturnas" min="0" value="0">
+            </div>
+            <div class="grupo-campo">
+              <label for="diasAsueto">Días de Asueto:</label>
+              <input type="number" id="diasAsueto" min="0" value="0">
+            </div>
+          </div>
+
+          <div class="grupo-campo">
+            <label for="diasDescanso">Días de Descanso Semanal Laborados:</label>
+            <input type="number" id="diasDescanso" min="0" value="0">
+          </div>
+        </section>
+
+        <!-- Botón de Acción Principal -->
+        <button type="button" id="btnCalcular" class="btn-primario">Calcular Liquidación</button>
+      </form>
+    </main>
+
+    <!-- Panel Derecho: Resumen Ejecutivo de Liquidación (Actualizado tras dar clic) -->
+    <aside class="panel-resultados">
+  <div class="tarjeta tarjeta-resumen">
+    <h2 class="titulo-tarjeta">Resumen de Liquidación</h2>
+
+    <!-- Metadatos superiores con los días calculados -->
+    <div class="resumen-metadatos">
+      <div><span>Tiempo Laborado:</span> <strong id="lblAntiguedad">--</strong></div>
+      <div><span>Salario Básico Diario:</span> <strong id="lblSalarioDiario">$0.00</strong></div>
+      <div><span>Días Vacaciones Computados:</span> <strong id="lblDiasVacacion">0 días</strong></div>
+      <div><span>Días Aguinaldo Computados:</span> <strong id="lblDiasAguinaldo">0 días</strong></div>
     </div>
 
-    <div class="form-group">
-        <label for="fechaInicio">Fecha de Inicio:</label>
-        <input type="date" id="fechaInicio">
+    <hr class="divisor">
+
+    <h3 class="subtitulo-resumen">Ingresos Devengados (Bruto)</h3>
+    <div class="desglose-lineas">
+      <div class="linea-concepto">
+        <span>Indemnización / Prestación:</span>
+        <strong id="lblIndemnizacion">$0.00</strong>
+      </div>
+      <div class="linea-concepto">
+        <span>Aguinaldo Proporcional:</span>
+        <strong id="lblAguinaldo">$0.00</strong>
+      </div>
+      <div class="linea-concepto">
+        <span>Vacaciones (Pendientes / Proporcionales):</span>
+        <strong id="lblVacaciones">$0.00</strong>
+      </div>
+
+      <!-- Desglose individual de horas extras, nocturnas, asuetos y descansos -->
+      <div class="linea-concepto">
+        <span>Horas Extras Diurnas:</span>
+        <strong id="lblHorasDiurnas">$0.00</strong>
+      </div>
+      <div class="linea-concepto">
+        <span>Horas Extras Nocturnas:</span>
+        <strong id="lblHorasNocturnas">$0.00</strong>
+      </div>
+      <div class="linea-concepto">
+        <span>Días de Asueto Laborados:</span>
+        <strong id="lblDiasAsueto">$0.00</strong>
+      </div>
+      <div class="linea-concepto">
+        <span>Descanso Semanal Laborado:</span>
+        <strong id="lblDescansoSemanal">$0.00</strong>
+      </div>
     </div>
 
-    <div class="form-group">
-        <label for="fechaFin">Fecha de Fin:</label>
-        <input type="date" id="fechaFin">
+    <div class="linea-concepto total-intermedio">
+      <span>Subtotal Bruto:</span>
+      <strong id="lblTotalBruto">$0.00</strong>
     </div>
 
-    <div class="form-group">
-        <label for="ultimaVacacion">Fecha de la Última Vacación:</label>
-        <input type="date" id="ultimaVacacion">
-    </div>
+    <!-- Deducciones y Total Neto se mantienen igual debajo -->
 
-    <div class="form-group">
-        <label for="causa">Causa de Finalización:</label>
-        <select id="causa">
-            <option value="1">1 - Despido Injustificado</option>
-            <option value="2">2 - Renuncia Voluntaria</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="horasDiurnas">Horas Extras Diurnas:</label>
-        <input type="number" id="horasDiurnas" value="0">
-    </div>
-
-    <div class="form-group">
-        <label for="horasNocturnas">Horas Extras Nocturnas:</label>
-        <input type="number" id="horasNocturnas" value="0">
-    </div>
-
-    <div class="form-group">
-        <label for="diasAsueto">Días de Asueto Laborados:</label>
-        <input type="number" id="diasAsueto" value="0">
-    </div>
-
-    <div class="form-group">
-        <label for="diasDescansoSemanal">Días de Descanso Semanal Laborados:</label>
-        <input type="number" id="diasDescansoSemanal" value="0">
-    </div>
-
-    <button onclick="procesarLiquidacion()">Calcular Liquidación</button>
-
-    <div id="resultado"></div>
-</div>
-
-<script>
-function procesarLiquidacion() {
-    // 1. Capturar datos antes de limpiar
-    const valSalario = document.getElementById('salario').value;
-    const valFechaInicio = document.getElementById('fechaInicio').value;
-    const valFechaFin = document.getElementById('fechaFin').value;
-    const causaDeFinalizacionNum = parseInt(document.getElementById('causa').value);
-    const horasExtrasDiurnasNum = parseInt(document.getElementById('horasDiurnas').value) || 0;
-    const horasExtrasNocturnasNum = parseInt(document.getElementById('horasNocturnas').value) || 0;
-    const diasAsuetoNum = parseInt(document.getElementById('diasAsueto').value) || 0;
-    const diasDescansoSemanalNum = parseInt(document.getElementById('diasDescansoSemanal').value) || 0;
-
-    if (!valSalario || !valFechaInicio || !valFechaFin) {
-        alert("Por favor, ingrese el salario, la fecha de inicio y la fecha de fin.");
-        return;
-    }
-
-    const resDiv = document.getElementById('resultado');
-    resDiv.style.display = 'block';
-    
-    // 2. Mostrar estado de carga notable
-    resDiv.className = "loading";
-    resDiv.textContent = "🔄 Procesando cálculo y actualizando datos...";
-
-    // 3. Simular un pequeño retraso visual para que se note la transición de carga
-    setTimeout(() => {
-        const SalarioMensualNum = parseFloat(valSalario);
-        const fechaInicioNum = new Date(valFechaInicio.replace(/-/g, '/'));
-        const fechaFinNum = new Date(valFechaFin.replace(/-/g, '/'));
-
-        // PASO 1: Salarios y horas
-        const salarioBasicoDiario = SalarioMensualNum / 30;
-        const horaOrdinaria = salarioBasicoDiario / 8;
-
-        // PASO 2: Jornadas extraordinarias
-        const valorHoraExtraDiurna = (horaOrdinaria * 2) * horasExtrasDiurnasNum; 
-        const valorHoraExtraNocturna = (horaOrdinaria * 1.25 * 2) * horasExtrasNocturnasNum;
-        const valorDiasAsueto = (salarioBasicoDiario * 2) * diasAsuetoNum;
-        const valorDiasDescansoSemanal = (salarioBasicoDiario * 1.5) * diasDescansoSemanalNum;
-
-        const inicio = dayjs(fechaInicioNum);
-        const fin = dayjs(fechaFinNum);
-
-        // CÁLCULO DE AGUINALDO
-        let corteAguinaldo = dayjs(`${fin.year()}-12-12`);
-        if (fin.isBefore(corteAguinaldo)) {
-            corteAguinaldo = corteAguinaldo.subtract(1, 'year');
-        }
-        if (inicio.isAfter(corteAguinaldo)) {
-            corteAguinaldo = inicio;
-        }
-
-        const mesesAguinaldo = fin.diff(corteAguinaldo, 'month');
-        const fechaMesesAguinaldo = corteAguinaldo.add(mesesAguinaldo, 'month');
-        const diasSueltosAguinaldo = fin.diff(fechaMesesAguinaldo, 'day');
-        const diasProporcionalesAguinaldo = (mesesAguinaldo * 30) + diasSueltosAguinaldo;
-
-        // CÁLCULO DE VACACIÓN E INDEMNIZACIÓN
-        const aniosLaborados = fin.diff(inicio, 'year');
-        const ultimoAniversario = inicio.add(aniosLaborados, 'year');
-        const mesesLaborados = fin.diff(ultimoAniversario, 'month');
-        const fechaUltimoMes = ultimoAniversario.add(mesesLaborados, 'month');
-        const diasSueltos = fin.diff(fechaUltimoMes, 'day');
-        const diasProporcionales = (mesesLaborados * 30) + diasSueltos;
-
-        // Prestaciones proporcionales 
-        const valorVacacionProporcional = ((salarioBasicoDiario * 15 * 1.3) * diasProporcionales) / 365;
-        
-        let valorAguinaldoProporcional = 0;
-        if (diasProporcionalesAguinaldo >= 200) {
-            if (aniosLaborados < 3) {
-                valorAguinaldoProporcional = (salarioBasicoDiario * 15 / 365) * diasProporcionalesAguinaldo;
-            } else if (aniosLaborados >= 3 && aniosLaborados <= 10) {
-                valorAguinaldoProporcional = (salarioBasicoDiario * 19 / 365) * diasProporcionalesAguinaldo;
-            } else if (aniosLaborados > 10) {
-                valorAguinaldoProporcional = (salarioBasicoDiario * 21 / 365) * diasProporcionalesAguinaldo;
-            }
-        }
-
-        // Indemnización
-        const salarioMinimoMensual = 408.80; 
-        const salarioMinimoDiario = salarioMinimoMensual / 30; 
-        let valorIndemnizacion = 0;
-
-        if (causaDeFinalizacionNum === 1) { 
-            const topeDespidoDiario = salarioMinimoDiario * 4;
-            let salarioBaseIndemnizacion = salarioBasicoDiario > topeDespidoDiario ? topeDespidoDiario : salarioBasicoDiario;
-            const indemnizacionAnios = salarioBaseIndemnizacion * 30 * aniosLaborados;
-            const indemnizacionProporcional = ((salarioBaseIndemnizacion * 30) / 360) * diasProporcionales;
-            valorIndemnizacion = indemnizacionAnios + indemnizacionProporcional;
-        } else if (causaDeFinalizacionNum === 2) { 
-            if (aniosLaborados >= 2) {
-                const topeRenunciaDiario = salarioMinimoDiario * 2;
-                let salarioBaseIndemnizacion = salarioBasicoDiario > topeRenunciaDiario ? topeRenunciaDiario : salarioBasicoDiario;
-                const indemnizacionAnios = salarioBaseIndemnizacion * 15 * aniosLaborados;
-                const indemnizacionProporcional = ((salarioBaseIndemnizacion * 15) / 360) * diasProporcionales;
-                valorIndemnizacion = indemnizacionAnios + indemnizacionProporcional;
-            } else {
-                valorIndemnizacion = 0; 
-            }
-        }
-
-        // DESCUENTOS DE LEY
-        const montoGravable = valorHoraExtraDiurna + valorHoraExtraNocturna + 
-                              valorDiasAsueto + valorDiasDescansoSemanal + 
-                              valorVacacionProporcional;
-
-        let descuentoISSS = montoGravable > 1000 ? 1000 * 0.03 : montoGravable * 0.03;
-        const descuentoAFP = montoGravable * 0.0725;
-
-        const limiteAguinaldoExento = salarioMinimoMensual * 2;
-        let aguinaldoGravable = valorAguinaldoProporcional > limiteAguinaldoExento ? valorAguinaldoProporcional - limiteAguinaldoExento : 0;
-
-        const baseImponibleRenta = (montoGravable - descuentoISSS - descuentoAFP) + aguinaldoGravable;
-        let descuentoRenta = 0;
-
-        if (baseImponibleRenta > 472.00 && baseImponibleRenta <= 895.24) {
-            descuentoRenta = ((baseImponibleRenta - 472.00) * 0.10) + 17.67;
-        } else if (baseImponibleRenta > 895.24 && baseImponibleRenta <= 2038.10) {
-            descuentoRenta = ((baseImponibleRenta - 895.24) * 0.20) + 60.00;
-        } else if (baseImponibleRenta > 2038.10) {
-            descuentoRenta = ((baseImponibleRenta - 2038.10) * 0.30) + 288.57;
-        }
-
-        const totalDescuentos = descuentoISSS + descuentoAFP + descuentoRenta;
-
-        // TOTALES
-        const totalDevengadoBruto = montoGravable + valorAguinaldoProporcional + valorIndemnizacion;
-        const totalLiquido = totalDevengadoBruto - totalDescuentos;
-
-        // Quitar clase de carga y mostrar resultados definitivos
-        resDiv.className = "";
-        resDiv.textContent = 
-`===============================================
-       LIQUIDACIÓN LABORAL - EL SALVADOR      
-===============================================
-Tiempo laborado: ${aniosLaborados} años, ${mesesLaborados} meses.
-Días proporcionales para vacaciones: ${diasProporcionales} días.
-Días proporcionales para aguinaldo: ${diasProporcionalesAguinaldo} días.
------------------------------------------------
-[+] Horas Extras Diurnas:      $${valorHoraExtraDiurna.toFixed(2)}
-[+] Horas Extras Nocturnas:    $${valorHoraExtraNocturna.toFixed(2)}
-[+] Días de Asueto:            $${valorDiasAsueto.toFixed(2)}
-[+] Días de Descanso Semanal:  $${valorDiasDescansoSemanal.toFixed(2)}
-[+] Vacación Proporcional:     $${valorVacacionProporcional.toFixed(2)}
-[+] Aguinaldo Proporcional:    $${valorAguinaldoProporcional.toFixed(2)}
-[+] Compensación/Indemnización:$${valorIndemnizacion.toFixed(2)}
------------------------------------------------
-TOTAL DEVENGADO BRUTO:         $${totalDevengadoBruto.toFixed(2)}
------------------------------------------------
-[-] ISSS (3%):                 $${descuentoISSS.toFixed(2)}
-[-] AFP (7.25%):               $${descuentoAFP.toFixed(2)}
-[-] Renta (ISR):               $${descuentoRenta.toFixed(2)}
-TOTAL DESCUENTOS:              $${totalDescuentos.toFixed(2)}
-===============================================
-TOTAL LÍQUIDO A RECIBIR:       $${totalLiquido.toFixed(2)}
-===============================================`;
-
-        // 4. Limpiar los campos del formulario tras calcular exitosamente
-        document.getElementById('salario').value = '';
-        document.getElementById('fechaInicio').value = '';
-        document.getElementById('fechaFin').value = '';
-        document.getElementById('horasDiurnas').value = '0';
-        document.getElementById('horasNocturnas').value = '0';
-        document.getElementById('diasAsueto').value = '0';
-        document.getElementById('diasDescansoSemanal').value = '0';
-        document.getElementById('causa').value = '1';
-
-    }, 500); // 500 milisegundos de animación de carga
-}
-</script>
-
+  <script src="Calculadora4.js"></script>
 </body>
 </html>

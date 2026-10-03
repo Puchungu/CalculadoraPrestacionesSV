@@ -1,0 +1,227 @@
+:root {
+  --color-fondo: #f4f6f9;
+  --color-superficie: #ffffff;
+  --color-primario: #0f172a;
+  --color-primario-hover: #1e293b;
+  --color-acento: #2563eb;
+  --color-texto: #1e293b;
+  --color-texto-secundario: #64748b;
+  --color-borde: #e2e8f0;
+  --radio-borde: 10px;
+  --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  padding: 2rem 1rem;
+}
+
+.contenedor-app {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Panel Izquierdo */
+.encabezado-seccion h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primario);
+}
+
+.encabezado-seccion p {
+  color: var(--color-texto-secundario);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.tarjeta {
+  background: var(--color-superficie);
+  border-radius: var(--radio-borde);
+  padding: 1.25rem;
+  border: 1px solid var(--color-borde);
+  box-shadow: var(--sombra);
+  margin-bottom: 1.25rem;
+}
+
+.titulo-tarjeta {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primario);
+  margin-bottom: 1rem;
+}
+
+.grupo-campo {
+  margin-bottom: 1rem;
+}
+
+.grupo-campo:last-child {
+  margin-bottom: 0;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-texto-secundario);
+  margin-bottom: 0.4rem;
+}
+
+input[type="number"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: var(--color-texto);
+  outline: none;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--color-acento);
+}
+
+.input-con-icono {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-con-icono .icono {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--color-texto-secundario);
+  font-weight: 600;
+}
+
+.input-con-icono input {
+  padding-left: 1.75rem;
+}
+
+.fila-dos-columnas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.grid-tres-columnas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.control-radios,
+.control-checkboxes {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.radio-label,
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--color-texto);
+  cursor: pointer;
+}
+
+.btn-primario {
+  width: 100%;
+  padding: 0.85rem;
+  background: var(--color-primario);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-primario:hover {
+  background: var(--color-primario-hover);
+}
+
+/* Panel Derecho (Sticky) */
+.panel-resultados {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.tarjeta-resumen {
+  border-top: 4px solid var(--color-acento);
+}
+
+.resumen-metadatos div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.divisor {
+  border: 0;
+  border-top: 1px solid var(--color-borde);
+  margin: 1rem 0;
+}
+
+.linea-concepto {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.caja-total {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid var(--color-borde);
+}
+
+.caja-total span {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-texto-secundario);
+  font-weight: 600;
+}
+
+.monto-destacado {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  margin-top: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .contenedor-app {
+    grid-template-columns: 1fr;
+  }
+  .panel-resultados {
+    position: static;
+  }
+}

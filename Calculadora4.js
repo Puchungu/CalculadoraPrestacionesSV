@@ -6,6 +6,9 @@ document.getElementById('causa').addEventListener('change', function() {
 
 function procesarLiquidacion() {
   ////////////////////////////INPUTS USUARIO/////////////////////////////////////////////////////////////////
+  const nombreEmpleado = document.getElementById('nombreEmpleado')?.value.trim() || '';
+  const duiEmpleado = document.getElementById('duiEmpleado')?.value.trim() || '';
+  const contenedorError = document.getElementById('mensajeError');
   const SalarioMensualNum = parseFloat(document.getElementById('salarioMensual').value) || 0;
   const fechaInicio = document.getElementById('fechaInicio').value;
   const fechaFin = document.getElementById('fechaFin').value;
@@ -17,10 +20,19 @@ function procesarLiquidacion() {
   const diasDescansoSemanalNum = parseInt(document.getElementById('diasDescanso').value) || 0;
   
   // Validación mínima para que no intente calcular con fechas vacías
-  if (!fechaInicio || !fechaFin || !ultimaVacacion || !SalarioMensualNum) {
-    alert("Por favor completa todas las fechas y el salario.");
-    return;
-  }
+  if (contenedorError) {
+      contenedorError.style.display = 'none';
+      contenedorError.textContent = '';
+    }
+
+    // Validación en el frontend (sin alert)
+    if (!fechaInicio || !fechaFin || !ultimaVacacion || SalarioMensualNum <= 0) {
+      if (contenedorError) {
+        contenedorError.textContent = "Por favor completa todos los campos obligatorios: fechas válidas y un salario mensual mayor a $0.00.";
+        contenedorError.style.display = 'block';
+      }
+      return;
+    }
 
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -186,6 +198,14 @@ function procesarLiquidacion() {
     // --- MOSTRAR RESULTADOS EN PANTALLA ---
     document.getElementById('lblAntiguedad').textContent = `${aniosLaborados} años, ${diasDespuesUltimoAnio} días`;
     document.getElementById('lblSalarioDiario').textContent = `$${salarioBasicoDiario.toFixed(2)}`;
+    // Mostrar datos del trabajador en el resumen
+    let textoTrabajador = nombreEmpleado || 'Anonimo';
+
+    const lblTrabajador = document.getElementById('lblNombreTrabajador');
+    if (lblTrabajador) lblTrabajador.textContent = textoTrabajador;
+
+    const lblDUI = document.getElementById('lblDUI');
+    if (lblDUI) lblDUI.textContent = duiEmpleado || '--';
 
     // Días calculados de vacaciones y aguinaldo
     document.getElementById('lblDiasVacacion').textContent = `${diasProporcionalesVacacion} días`;
@@ -206,5 +226,8 @@ function procesarLiquidacion() {
     document.getElementById('lblTotalBruto').textContent = `$${totalBruto.toFixed(2)}`;
 }
 
-// Conectar el botón con la función al hacer clic
-document.getElementById('btnCalcular').addEventListener('click', procesarLiquidacion);
+// El evento submit permite que el navegador valide los campos required antes de calcular.
+document.getElementById('formularioLiquidacion').addEventListener('submit', function(event) {
+  event.preventDefault();
+  procesarLiquidacion();
+});

@@ -17,12 +17,22 @@
         <h1>Calculadora de Finiquito Laboral</h1>
         <p>Cálculo conforme al Código de Trabajo (El Salvador)</p>
       </header>
-
-      <form id="formularioLiquidacion" class="formulario-grid" onsubmit="return false;">
+  
+      <form id="formularioLiquidacion" class="formulario-grid">
         <!-- Tarjeta 1: Datos Contractuales -->
+
         <section class="tarjeta">
           <h2 class="titulo-tarjeta">1. Datos Contractuales y Causa</h2>
-          
+          <div class="fila-dos-columnas">
+              <div class="grupo-campo">
+                <label for="nombreEmpleado">Nombre del Trabajador (Opcional):</label>
+                <input type="text" id="nombreEmpleado" class="input-texto" placeholder="Ej. Roberto Herrera">
+              </div>
+              <div class="grupo-campo">
+                <label for="duiEmpleado">DUI (Opcional):</label>
+                <input type="text" id="duiEmpleado" class="input-texto" placeholder="00000000-0" maxlength="10">
+              </div>
+          </div>
           <div class="grupo-campo">
             <label for="salarioMensual">Salario Base Mensual ($):</label>
             <div class="input-con-icono">
@@ -124,7 +134,8 @@
         </section>
 
         <!-- Botón de Acción Principal -->
-        <button type="button" id="btnCalcular" class="btn-primario">Calcular Liquidación</button>
+        <div id="mensajeError" class="mensaje-error" role="alert" aria-live="polite" style="display: none;"></div>
+        <button type="submit" id="btnCalcular" class="btn-primario">Calcular Liquidación</button>
       </form>
     </main>
 
@@ -139,6 +150,8 @@
       <div><span>Salario Básico Diario:</span> <strong id="lblSalarioDiario">$0.00</strong></div>
       <div><span>Días Vacaciones Computados:</span> <strong id="lblDiasVacacion">0 días</strong></div>
       <div><span>Días Aguinaldo Computados:</span> <strong id="lblDiasAguinaldo">0 días</strong></div>
+      <div><span>Trabajador:</span> <strong id="lblNombreTrabajador">Anonimo</strong></div>
+      <div><span>DUI:</span> <strong id="lblDUI">--</strong></div>
     </div>
 
     <hr class="divisor">

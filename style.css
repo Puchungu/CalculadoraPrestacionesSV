@@ -81,6 +81,7 @@ label {
 
 input[type="number"],
 input[type="date"],
+input[type="text"],
 select {
   width: 100%;
   padding: 0.65rem 0.75rem;
@@ -160,6 +161,15 @@ select:focus {
 
 .btn-primario:hover {
   background: var(--color-primario-hover);
+}
+
+.mensaje-error {
+  color: #b42318;
+  background: #fef3f2;
+  border: 1px solid #fecdca;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.9rem;
 }
 
 /* Panel Derecho (Sticky) */

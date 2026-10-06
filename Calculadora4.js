@@ -19,22 +19,6 @@ function procesarLiquidacion() {
   const diasAsuetoNum = parseInt(document.getElementById('diasAsueto').value) || 0;
   const diasDescansoSemanalNum = parseInt(document.getElementById('diasDescanso').value) || 0;
   
-  // Validación mínima para que no intente calcular con fechas vacías
-  if (contenedorError) {
-      contenedorError.style.display = 'none';
-      contenedorError.textContent = '';
-    }
-
-    // Validación en el frontend (sin alert)
-    if (!fechaInicio || !fechaFin || !ultimaVacacion || SalarioMensualNum <= 0) {
-      if (contenedorError) {
-        contenedorError.textContent = "Por favor completa todos los campos obligatorios: fechas válidas y un salario mensual mayor a $0.00.";
-        contenedorError.style.display = 'block';
-      }
-      return;
-    }
-
-
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   //Calcular Salario Basico Diario
@@ -224,10 +208,18 @@ function procesarLiquidacion() {
 
     // Total Bruto
     document.getElementById('lblTotalBruto').textContent = `$${totalBruto.toFixed(2)}`;
+    // Mostrar el botón de PDF una vez completado el cálculo sin errores
+    const btnPDF = document.getElementById('btnExportarPDF');
+    if (btnPDF) btnPDF.style.display = 'block';
 }
 
 // El evento submit permite que el navegador valide los campos required antes de calcular.
 document.getElementById('formularioLiquidacion').addEventListener('submit', function(event) {
   event.preventDefault();
   procesarLiquidacion();
+});
+
+document.getElementById('formularioLiquidacion').addEventListener('input', function() {
+  const btnPDF = document.getElementById('btnExportarPDF');
+  if (btnPDF) btnPDF.style.display = 'none';
 });

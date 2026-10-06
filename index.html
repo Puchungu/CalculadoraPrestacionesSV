@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <!-- Day.js para el manejo preciso de fechas -->
   <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -219,10 +220,14 @@
           <span>Total Neto a Pagar</span>
           <div class="monto-destacado" id="lblTotalNeto">$0.00</div>
         </div>
+        <button type="button" id="btnExportarPDF" class="btn-primario" style="display: none; width: 100%; margin-top: 16px; background-color: #059669;">
+          📄 Descargar Finiquito en PDF
+        </button>
       </div>
     </aside>
   </div>
 
   <script src="Calculadora4.js"></script>
+  <script src="pdfExport.js"></script>
 </body>
 </html>

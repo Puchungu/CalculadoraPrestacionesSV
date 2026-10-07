@@ -235,3 +235,69 @@ select:focus {
     position: static;
   }
 }
+
+/* Contenedor del selector de asuetos */
+.contenedor-asuetos-plegable {
+  margin-top: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.resumen-asuetos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  user-select: none;
+}
+
+.resumen-asuetos small {
+  color: #64748b;
+  font-weight: normal;
+}
+
+/* Grilla fluida de chips */
+.chips-asuetos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Diseño de cada tag */
+.chip-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.chip-item:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* Resaltado cuando está seleccionado */
+.chip-item:has(input:checked) {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.chip-item input {
+  accent-color: #2563eb;
+  cursor: pointer;
+}

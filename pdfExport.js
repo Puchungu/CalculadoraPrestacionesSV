@@ -2,8 +2,8 @@ document.getElementById('btnExportarPDF').addEventListener('click', function() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  const nombre = document.getElementById('nombreEmpleado')?.value.trim() || 'No especificado';
-  const dui = document.getElementById('duiEmpleado')?.value.trim() || 'N/A';
+  const nombre = document.getElementById('nombreEmpleado')?.value.trim() || 'Anónimo';
+  const dui = document.getElementById('duiEmpleado')?.value.trim() || 'No especificado';
   const fechaInicio = document.getElementById('fechaInicio')?.value || 'N/A';
   const fechaFin = document.getElementById('fechaFin')?.value || 'N/A';
   const neto = document.getElementById('lblTotalNeto')?.textContent || '$0.00';

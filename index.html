@@ -109,30 +109,93 @@
           </div>
         </section>
 
-        <!-- Tarjeta 3: Novedades del Último Período -->
-        <section class="tarjeta">
-          <h2 class="titulo-tarjeta">3. Jornada Extraordinaria y Asuetos</h2>
-          
-          <div class="grid-tres-columnas">
-            <div class="grupo-campo">
-              <label for="horasExtrasDiurnas">H. Extras Diurnas:</label>
-              <input type="number" id="horasExtrasDiurnas" min="0" value="0">
-            </div>
-            <div class="grupo-campo">
-              <label for="horasExtrasNocturnas">H. Extras Nocturnas:</label>
-              <input type="number" id="horasExtrasNocturnas" min="0" value="0">
-            </div>
-            <div class="grupo-campo">
-              <label for="diasAsueto">Días de Asueto:</label>
-              <input type="number" id="diasAsueto" min="0" value="0">
-            </div>
-          </div>
+<!-- Tarjeta 3: Novedades del Último Período -->
+<section class="tarjeta">
+  <h2 class="titulo-tarjeta">3. Jornada Extraordinaria y Asuetos</h2>
 
-          <div class="grupo-campo">
-            <label for="diasDescanso">Días de Descanso Semanal Laborados:</label>
-            <input type="number" id="diasDescanso" min="0" value="0">
-          </div>
-        </section>
+  <div class="grid-tres-columnas">
+    <div class="grupo-campo">
+      <label for="horasExtrasDiurnas">H. Extras Diurnas:</label>
+      <input type="number" id="horasExtrasDiurnas" min="0" value="0">
+    </div>
+    <div class="grupo-campo">
+      <label for="horasExtrasNocturnas">H. Extras Nocturnas:</label>
+      <input type="number" id="horasExtrasNocturnas" min="0" value="0">
+    </div>
+    <div class="grupo-campo">
+      <label for="diasAsueto">Días de Asueto:</label>
+      <input type="number" id="diasAsueto" min="0" value="0">
+    </div>
+  </div>
+
+  <div class="grupo-campo">
+    <label for="diasDescanso">Días de Descanso Semanal Laborados:</label>
+    <input type="number" id="diasDescanso" min="0" value="0">
+  </div>
+
+  <!-- Selector visual a ancho completo -->
+  <details class="contenedor-asuetos-plegable">
+    <summary class="resumen-asuetos">
+      <span>📅 Asistente: Seleccionar asuetos trabajados (Art. 190 C.T.)</span>
+      <small>Opcional</small>
+    </summary>
+
+    <div class="chips-asuetos-grid">
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>1 Ene (Año Nuevo)</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>Jueves Santo</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>Viernes Santo</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>Sábado Santo</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>1 May (Trabajo)</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>10 May (Madre)</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>17 Jun (Padre)</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>6 Ago (Divino Salvador)</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>3 o 5 Ago (San Salvador)</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>Fiesta Patronal Local</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>15 Sep (Independencia)</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>2 Nov (Difuntos)</span>
+      </label>
+      <label class="chip-item">
+        <input type="checkbox" class="chk-asueto">
+        <span>25 Dic (Navidad)</span>
+      </label>
+    </div>
+  </details>
+</section>
 
         <!-- Botón de Acción Principal -->
         <div id="mensajeError" class="mensaje-error" role="alert" aria-live="polite" style="display: none;"></div>

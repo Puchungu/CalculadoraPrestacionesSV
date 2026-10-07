@@ -210,7 +210,9 @@ function procesarLiquidacion() {
     document.getElementById('lblTotalBruto').textContent = `$${totalBruto.toFixed(2)}`;
     // Mostrar el botón de PDF una vez completado el cálculo sin errores
     const btnPDF = document.getElementById('btnExportarPDF');
+    const btnNuevo = document.getElementById('btnNuevoFiniquito');
     if (btnPDF) btnPDF.style.display = 'block';
+    if (btnNuevo) btnNuevo.style.display = 'block';
 }
 
 // El evento submit permite que el navegador valide los campos required antes de calcular.
@@ -222,4 +224,63 @@ document.getElementById('formularioLiquidacion').addEventListener('submit', func
 document.getElementById('formularioLiquidacion').addEventListener('input', function() {
   const btnPDF = document.getElementById('btnExportarPDF');
   if (btnPDF) btnPDF.style.display = 'none';
+});
+
+
+// --- FUNCIÓN PARA REINICIAR LA CALCULADORA ---
+document.getElementById('btnNuevoFiniquito').addEventListener('click', function() {
+  // 1. Limpiar todos los campos del formulario
+  const form = document.getElementById('formularioLiquidacion');
+  if (form) form.reset();
+
+  // 2. Restablecer valores numéricos con defaultValue
+  document.getElementById('horasExtrasDiurnas').value = '0';
+  document.getElementById('horasExtrasNocturnas').value = '0';
+  document.getElementById('diasAsueto').value = '0';
+  document.getElementById('diasDescanso').value = '0';
+
+  // 3. Ocultar campo condicional de preaviso y mensajes de error
+  const campoPreaviso = document.getElementById('campoPreaviso');
+  if (campoPreaviso) campoPreaviso.style.display = 'none';
+
+  const contenedorError = document.getElementById('mensajeError');
+  if (contenedorError) {
+    contenedorError.style.display = 'none';
+    contenedorError.textContent = '';
+  }
+
+  // 4. Restablecer el panel de resultados a valores iniciales
+  const setTexto = (id, valor) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = valor;
+  };
+
+  setTexto('lblNombreTrabajador', '--');
+  setTexto('lblDUI', '--');
+  setTexto('lblAntiguedad', '--');
+  setTexto('lblSalarioDiario', '$0.00');
+  setTexto('lblDiasVacacion', '0 días');
+  setTexto('lblDiasAguinaldo', '0 días');
+
+  setTexto('lblIndemnizacion', '$0.00');
+  setTexto('lblAguinaldo', '$0.00');
+  setTexto('lblVacaciones', '$0.00');
+  setTexto('lblHorasDiurnas', '$0.00');
+  setTexto('lblHorasNocturnas', '$0.00');
+  setTexto('lblDiasAsueto', '$0.00');
+  setTexto('lblDescansoSemanal', '$0.00');
+  setTexto('lblTotalBruto', '$0.00');
+
+  setTexto('lblISSS', '-$0.00');
+  setTexto('lblAFP', '-$0.00');
+  setTexto('lblRenta', '-$0.00');
+  setTexto('lblTotalNeto', '$0.00');
+
+  // 5. Volver a ocultar los botones de PDF y reinicio
+  this.style.display = 'none';
+  const btnPDF = document.getElementById('btnExportarPDF');
+  if (btnPDF) btnPDF.style.display = 'none';
+
+  // 6. Subir el foco al primer campo
+  document.getElementById('nombreEmpleado')?.focus();
 });
